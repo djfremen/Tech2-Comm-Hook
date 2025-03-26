@@ -1,0 +1,91 @@
+===== DIAGNOSTIC LOG - Wed 03/26/2025 15:27:13.16 ===== 
+ 
+[OK] Running with administrative privileges 
+===== WINDOWS DEFENDER STATUS ===== 
+
+
+DisableRealtimeMonitoring : False
+ExclusionPath             : 
+ExclusionProcess          : 
+
+
+
+===== REQUIRED FILES ===== 
+Checking current directory: "C:\Users\manfr\Downloads\hook" 
+[OK] Found Injector at: tools\Injector.x86.exe 
+[OK] Found Hook DLL at: build\Interceptor.x86.dll 
+[OK] Found handle.exe at: tools\handle.exe 
+[OK] Found C:\temp directory 
+===== DIRECTORY PERMISSIONS ===== 
+C:\temp BUILTIN\Administrators:(I)(OI)(CI)(F)
+        NT AUTHORITY\SYSTEM:(I)(OI)(CI)(F)
+        BUILTIN\Users:(I)(OI)(CI)(RX)
+        NT AUTHORITY\Authenticated Users:(I)(M)
+        NT AUTHORITY\Authenticated Users:(I)(OI)(CI)(IO)(M)
+
+Successfully processed 1 files; Failed processing 0 files
+Checking permissions for directory: tools 
+tools NT AUTHORITY\SYSTEM:(OI)(CI)(F)
+      BUILTIN\Administrators:(OI)(CI)(F)
+      DESKTOP-OGEP318\manfr:(OI)(CI)(F)
+
+Successfully processed 1 files; Failed processing 0 files
+Checking permissions for directory: build 
+build NT AUTHORITY\SYSTEM:(OI)(CI)(F)
+      BUILTIN\Administrators:(OI)(CI)(F)
+      DESKTOP-OGEP318\manfr:(OI)(CI)(F)
+
+Successfully processed 1 files; Failed processing 0 files
+[INFO] Directory permission checks completed 
+===== JAVA PROCESSES ===== 
+
+ProcessName   Id Path                                          
+-----------   -- ----                                          
+javaw       6068 C:\Program Files (x86)\Java\jre6\bin\javaw.exe
+
+
+===== COM PORTS ===== 
+Add-Type : Cannot add type. The assembly 'System.IO.Ports' could not be found.
+At line:1 char:7
++ try { Add-Type -AssemblyName System.IO.Ports; [System.IO.Ports.Serial ...
++       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (System.IO.Ports:String) [Add-Type], Exception
+    + FullyQualifiedErrorId : ASSEMBLY_NOT_FOUND,Microsoft.PowerShell.Commands.AddTypeCommand
+ 
+Error loading System.IO.Ports:  + Cannot add type. One or more required assemblies are missing.
+===== COM PORT HANDLE SEARCH (com8) ===== 
+Running: "tools\handle.exe" com8 
+
+Nthandle v5.0 - Handle viewer
+Copyright (C) 1997-2022 Mark Russinovich
+Sysinternals - www.sysinternals.com
+
+No matching handles found.
+[WARNING] No javaw.exe process found with handle to com8 
+===== TARGET PROCESS ARCHITECTURE ===== 
+Missing closing ')' after expression in 'elseif' statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingEndParenthesisAfterStatement
+ 
+Injection command: "tools\Injector.x86.exe" 6068 "build\Interceptor.x86.dll" 
+===== INJECTION EXECUTION ===== 
+Executing injection... 
+Attempting to inject build\Interceptor.x86.dll into process 6068
+Error: DLL injection failed. LoadLibraryA returned 0.
+Return code: 1 
+[ERROR] No log file was created 
+===== RECOMMENDATIONS ===== 
+Based on the diagnostic results: 
+[RECOMMENDATION] The injection failed with return code 1. 
+Try the following: 
+1. Ensure Windows Defender exclusions are set for: 
+   - C:\Users\manfr\Downloads\hook\tools\Injector.x86.exe 
+   - C:\Users\manfr\Downloads\hook\build\Interceptor.x86.dll 
+   - C:\temp 
+2. Temporarily disable Windows Defender Real-time Protection 
+3. Verify that the target Java process is 32-bit 
+4. Check that your javaw.exe process is still running 
+[ALTERNATIVE] If DLL injection continues to fail, consider setting up port redirection: 
+1. Use com0com to create a virtual COM port pair 
+2. Configure your Java app to use one port of the pair 
+3. Monitor the other port directly without injection 
