@@ -1,56 +1,57 @@
-# COM Port Hook - Project Directory
+# Tech2-Comm-Hook: COM Port Monitoring Tool
 
-This repository contains tools for monitoring and capturing COM port traffic by injecting a DLL into processes that use COM ports.
+A tool for monitoring COM port traffic in Windows applications via DLL injection. This allows you to see all data being sent and received through COM ports in any application without modifying the application's source code.
 
-## Directory Structure
+## Features
 
-- **src/**: Source code files for the project
-  - C++ source files for the hook DLL and injector
-  - MinHook implementation files
+- Intercepts CreateFileW, ReadFile, WriteFile, and CloseHandle API calls
+- Logs all COM port traffic with timestamps
+- Provides hex and ASCII representations of data
+- Non-invasive - works with any application
+- Logs to C:\temp\com_hook_log.txt
 
-- **binary/**: Compiled executables and libraries
-  - Interceptor.x86.dll - 32-bit DLL for hooking
-  - Injector.x86.exe - 32-bit DLL injector
-  - handle.exe - Sysinternals tool for finding process handles
+## Requirements
 
-- **scripts/**: All scripts organized by functionality
-  - **building/**: Scripts for building the project
-    - build_hook.bat - Builds the COM port interceptor DLL
-    - build_simple_hook.bat - Builds the simplified test DLL
-    - compile_test_hook.bat - Compiles a minimal test DLL
-  - **injection/**: Scripts for injecting the DLL into target processes
-    - inject_simple.bat - Simple injection script
-    - defender_simple_inject.bat - Injection with Windows Defender handling
-    - Various other injection methods and approaches
-  - **monitoring/**: Scripts for monitoring COM port activity
-    - monitor_com.ps1 - Monitoring COM port communication
-    - simple_com_monitor.ps1 - Simple COM port monitoring
-    - Various other monitoring and data capture scripts
-  - **diagnostic/**: Scripts for diagnosing issues
-    - injection_diagnostic.bat - Diagnoses DLL injection issues
-    - check_dependencies.bat - Checks for required dependencies
+- Windows operating system
+- Target process must be 32-bit (x86)
+- Administrative privileges recommended
 
-- **docs/**: Documentation files
-  - Various README and markdown files documenting the project
+## Quick Start
 
-- **lib/**: External libraries
-  - minhook-master/ - The MinHook library used for API hooking
+1. Run `create_defender_exclusions.bat` as administrator to add necessary Windows Defender exclusions
+2. Find the Process ID (PID) of your target application
+3. Run `robust_inject.bat <PID>`, for example: `robust_inject.bat 9568`
+4. Use the target application to perform COM port operations
+5. Check C:\temp\com_hook_log.txt for COM port traffic logs
 
-- **build/**: Build output directory
-  - SimpleHook.x86.dll - Simplified test DLL
+## Troubleshooting
 
-- **backup/**: Backup and historical files
-  - Object files and logs
-  - Visual Studio project files
+If injection fails:
+- Make sure you're running as Administrator
+- Verify the target process is 32-bit using `check_process_arch.bat <PID>`
+- Temporarily disable anti-virus/Windows Defender
+- Restart the target application and try again
 
-## Getting Started
+## Building from Source
 
-For detailed usage instructions, see the documentation in the `docs/` directory.
+Pre-compiled binaries are included, but if you want to build from source:
 
-Main approaches for COM port monitoring:
+1. Make sure you have Visual Studio with C++ development tools installed
+2. Run `scripts\building\build_hook_and_injector.bat` from the project root
+3. The compiled files will be placed in `build\` and `tools\` directories
 
-1. **DLL Injection**: Inject a hook DLL to intercept COM port calls
-   - See scripts in `scripts/injection/` directory
-   
-2. **COM Port Redirection**: Create virtual COM port pairs
-   - See scripts in `scripts/monitoring/` directory 
+## Files
+
+- `src/hook.cpp` - Source code for the DLL that hooks COM port functions
+- `src/injector.cpp` - Source code for the DLL injector
+- `build/Interceptor.x86.dll` - Compiled hook DLL (32-bit)
+- `tools/Injector.x86.exe` - Compiled injector executable (32-bit)
+- `robust_inject.bat` - Main script for injecting the DLL
+- `create_defender_exclusions.bat` - Helper to add Windows Defender exclusions
+- `check_process_arch.bat` - Utility to check process architecture
+
+## Notes
+
+- This tool is for educational and debugging purposes only
+- The tool only logs data when the application actually uses COM ports
+- Non-standard COM port access methods may not be captured 
